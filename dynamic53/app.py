@@ -101,8 +101,8 @@ class UpdateReqHandler(tornado.web.RequestHandler):
         myip = self.get_argument('myip', default=None)
 
         if not myip:
-            #TODO: guess my ip
-            pass
+            myip = self.request.remote_ip
+
         try:
             res = r53_change_record(hostname, myip,
                                     self.http_auth_user, self.http_auth_password)
@@ -117,7 +117,10 @@ class UpdateReqHandler(tornado.web.RequestHandler):
             self.write('911')
             return
         
-        self.write('good')
+        if myip == "127.0.0.1":
+            self.write('good 127.0.0.1')
+        else:
+            self.write('good')
 
 settings = {
     "debug": True,
