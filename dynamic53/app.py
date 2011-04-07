@@ -130,12 +130,22 @@ application = tornado.web.Application([
 def main():
     tornado.options.define("bind_ip", default="127.0.0.1", type=str)
     tornado.options.define("port", default=8888, type=int)
+    tornado.options.define("certfile", default="", type=str)
+    tornado.options.define("keyfile", default="", type=str)
     tornado.options.parse_command_line()
     
     bind_ip = options["bind_ip"].value()
     listen_port = options["port"].value()
 
-    http_server = tornado.httpserver.HTTPServer(application)
+    certfile = options["certfile"].value()
+    keyfile = options["keyfile"].value()
+
+    if certfile and keyfile:
+        ssl_options = {"certfile": certfile, "keyfile": keyfile}
+    else:
+        ssl_options = None
+
+    http_server = tornado.httpserver.HTTPServer(application, ssl_options=ssl_options)
     http_server.listen(listen_port, address=bind_ip)
     tornado.ioloop.IOLoop.instance().start()
 
