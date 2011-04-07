@@ -3,7 +3,7 @@ Dynamic53
 Dynamic53 is a REST API interface server backed by Amazon Route 53.
 Dynamic53 provides an API similar to DDNS providers,
 specifically dyndns2-like protocol,
-thus can be used to build a personal dynamic DNS service
+thus it can be used to build a personal dynamic DNS service
 which is updatable via existing DDNS clients like ddclient.
 
 Requirement
@@ -13,15 +13,17 @@ You need your own domain.
 Zone must be created on Route53,
 WHOIS information for the domain must be setup correctly for Route 53,
 to access the updated information.
+You need python and python-setuptools installed in the server.
 
 Installation
 =============
 	# python setup.py install
-(will install dynamic53 command in your bin directory)
+(will install depending python modules, and puts dynamic53 command in your bin directory)
 
 Running
 ========
 	# dynamic53 --bind_ip=0.0.0.0 --port=80
+(for other options, consult `dynamic53 --help` output)
 
 Example
 ========
@@ -36,17 +38,25 @@ To update IP address using ddclient, use config like:
 	protocol=dyndns2,
 	your-dynamic-host.example.com           # hostname to update
 
+Old ddclient problem
+======================
 Old ddclient has problems in Base64 encoding for long passwords.
 Use newer ones.
+
+If you can't use newer ones, comment out the 3 lines below in /usr/sbin/ddclient,
+by inserting '#' on the head. This should not harm anything.
+
+    # break encoded string into lines of no more than 76 characters each
+    if (length $eol) {
+        $res =~ s/(.{1,76})/$1$eol/g;
+    }
 
 Limitations
 =============
 * Doesn't support multi hostnames in requests yet.
-* IP address (myip) guessing is not implemeted yet.
 
 Disclaimer
 ============
 This is nothing more than a quick-hack project.
 Using this in production environment is not recommended.
-
 
