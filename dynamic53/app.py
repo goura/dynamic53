@@ -63,6 +63,8 @@ def r53_change_record(name, values,
                                 )
     res = conn.get_all_hosted_zones()
 
+    domain_name = re.sub('^[^\.]*\.', '', name)
+
     hosted_zone_id = None
     for zoneinfo in res['ListHostedZonesResponse']['HostedZones']:
         zonename = zoneinfo['Name']
@@ -71,13 +73,11 @@ def r53_change_record(name, values,
         if zonename[-1] == '.':
             zonename = zonename[:-1]
 
-        if name == zonename:
-            hosted_zone_id = _zone_id
+	logging.debug("%s %s" % (domain_name, zonename))
+	if domain_name == zonename:
+	    hosted_zone_id = _zone_id
             break
 
-        if name[-len(zonename):] == zonename:
-            hosted_zone_id = _zone_id
-            break
     if not hosted_zone_id:
         raise NotInHostedZonesError(name)
 
@@ -106,14 +106,15 @@ class UpdateReqHandler(tornado.web.RequestHandler):
         try:
             res = r53_change_record(hostname, myip,
                                     self.http_auth_user, self.http_auth_password)
-            logging.info(res)
+            logging.debug(res)
         except NotInHostedZonesError:
             self.write('nohost')
             return
         except DNSServerError:
             self.write('badauth')
             return
-        except:
+        except Exception, e:
+	    logging.debug(e)
             self.write('911')
             return
         
