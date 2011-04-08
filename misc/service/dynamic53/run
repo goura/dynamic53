@@ -1,0 +1,5 @@
+#!/bin/sh
+exec 2>&1
+exec \
+dynamic53 --bind_ip=0.0.0.0 --port=80 --logging=debug --log_file_prefix=/var/log/dynamic53.log
+
