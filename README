@@ -38,7 +38,7 @@ To update IP address using ddclient, use config like:
 	protocol=dyndns2,
 	your-dynamic-host.example.com           # hostname to update
 
-Old ddclient problem
+Old ddclient Problem
 ======================
 Old ddclient has problems in Base64 encoding for long passwords.
 Use newer ones.
@@ -47,9 +47,23 @@ If you can't use newer ones, comment out the 3 lines below in /usr/sbin/ddclient
 by inserting '#' on the head. This should not harm anything.
 
     # break encoded string into lines of no more than 76 characters each
-    if (length $eol) {
-        $res =~ s/(.{1,76})/$1$eol/g;
-    }
+#    if (length $eol) {
+#        $res =~ s/(.{1,76})/$1$eol/g;
+#    }
+
+Nested Zones Problem
+=======================
+If you have nested zones registered in your Route 53,
+requests for changes will be ambiguous.
+If you like to set A records to the domain itself,
+add '.' in front of the hostname.
+
+ex)
+If you have 'example.com' 'hige.example.com' registered in Route 53,
+and you want to add/change 'hige.example.com' to 'example.com',
+use 'hige.example.com'.
+If you want to add/change 'hige.example.com' to 'hige.example.com',
+use '.hige.example.com'.
 
 Limitations
 =============
