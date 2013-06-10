@@ -64,6 +64,8 @@ def r53_change_record(name, values,
     res = conn.get_all_hosted_zones()
 
     domain_name = re.sub('^[^\.]*\.', '', name)
+    if name[0] == '.':
+        name = name[1:]
 
     hosted_zone_id = None
     for zoneinfo in res['ListHostedZonesResponse']['HostedZones']:
