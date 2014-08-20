@@ -75,9 +75,9 @@ def r53_change_record(name, values,
         if zonename[-1] == '.':
             zonename = zonename[:-1]
 
-	logging.debug("%s %s" % (domain_name, zonename))
-	if domain_name == zonename:
-	    hosted_zone_id = _zone_id
+        logging.debug("%s %s" % (domain_name, zonename))
+        if domain_name == zonename:
+            hosted_zone_id = _zone_id
             break
 
     if not hosted_zone_id:
@@ -116,7 +116,7 @@ class UpdateReqHandler(tornado.web.RequestHandler):
             self.write('badauth')
             return
         except Exception, e:
-	    logging.debug(e)
+            logging.debug(e)
             self.write('911')
             return
         
@@ -140,11 +140,11 @@ def main():
     tornado.options.define("keyfile", default="", type=str)
     tornado.options.parse_command_line()
     
-    bind_ip = options["bind_ip"].value()
-    listen_port = options["port"].value()
+    bind_ip = options["bind_ip"]
+    listen_port = options["port"]
 
-    certfile = options["certfile"].value()
-    keyfile = options["keyfile"].value()
+    certfile = options["certfile"]
+    keyfile = options["keyfile"]
 
     if certfile and keyfile:
         ssl_options = {"certfile": certfile, "keyfile": keyfile}
